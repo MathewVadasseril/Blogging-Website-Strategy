@@ -155,3 +155,69 @@ CMS.registerPreviewStyle(`
 CMS.registerPreviewTemplate('posts', sitePreview('posts'));
 CMS.registerPreviewTemplate('booklets', sitePreview('booklets'));
 CMS.registerPreviewTemplate('site', sitePreview('settings'));
+
+/* ------------------------------------------------------------------ 3. Bracketed notes
+   Text in brackets in a field's name, such as "Icon (Font Awesome name, e.g. fa-bolt)",
+   is shown smaller in a quieter style (see .apt-aside in editor.css) so the main label
+   stands out. Only field names are touched: not headers, menus or anything you type. */
+const ASIDE_SCOPE = 'section.field > header h4';
+const HAS_BRACKETS = /\([^()]*\)/;
+const added = new WeakMap();    // split text node -> the nodes added after it
+const ownText = new WeakMap();  // split text node -> the text this script left in it
+
+function splitBrackets(textNode) {
+  added.get(textNode)?.forEach(n => n.remove());
+  added.delete(textNode);
+  ownText.delete(textNode);
+  const text = textNode.data;
+  if (!HAS_BRACKETS.test(text)) return;
+  const parts = text.split(/(\([^()]*\))/).filter(Boolean);
+  const nodes = parts.slice(1).map(part => {
+    if (part.startsWith('(') && part.endsWith(')')) {
+      const span = document.createElement('span');
+      span.className = 'apt-aside';
+      span.textContent = part;
+      return span;
+    }
+    const t = document.createTextNode(part);
+    t.aptAdded = true;
+    return t;
+  });
+  textNode.data = parts[0];
+  textNode.after(...nodes);
+  added.set(textNode, nodes);
+  ownText.set(textNode, parts[0]);
+}
+
+function styleBrackets() {
+  for (const scope of document.querySelectorAll(ASIDE_SCOPE)) {
+    const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) {
+      const n = walker.currentNode;
+      if (n.aptAdded || added.has(n) || n.parentElement?.closest('.apt-aside, input, textarea, [contenteditable="true"]')) continue;
+      nodes.push(n);
+    }
+    nodes.forEach(splitBrackets);
+  }
+}
+
+// If Sveltia redraws a label's text, re-split it; ignore the changes this script makes itself.
+const changed = new Set();
+let queued = false;
+const asideObserver = new MutationObserver(records => {
+  for (const r of records) {
+    if (r.type === 'characterData' && added.has(r.target) && r.target.data !== ownText.get(r.target)) changed.add(r.target);
+  }
+  if (queued) return;
+  queued = true;
+  requestAnimationFrame(() => {
+    queued = false;
+    asideObserver.disconnect();
+    changed.forEach(n => (n.isConnected ? splitBrackets(n) : added.get(n)?.forEach(x => x.remove())));
+    changed.clear();
+    styleBrackets();
+    asideObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+  });
+});
+asideObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
