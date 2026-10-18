@@ -317,10 +317,10 @@ section.field[data-field-type="list"] .item > .item-body {
   letter-spacing: 0.01em;
 }
 [role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar input::placeholder {
-  font-family: var(--apt-serif);
-  font-style: italic;
-  font-size: 1.08em;
-  color: rgba(246, 234, 219, 0.78);
+  font-family: var(--apt-sans);     /* Manrope, like the rest of the interface */
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(246, 234, 219, 0.72);
   opacity: 1;
 }
 [role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar .sui.icon {
@@ -345,4 +345,12 @@ section.field[data-field-type="list"] .item > .item-body {
 [role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar :is(.sui.text-input, input),
 [role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar :is(.sui.text-input, input):is(:focus, :focus-visible, :focus-within) {
   outline: none !important;
+}
+
+/* ------------------------------------------------ right-hand side panels
+   The Slug / Validation / History / Backlinks rail and its panel are hidden entirely,
+   so the edit and preview panes get the full width. Every save is still kept in the
+   repo's commit history on GitHub. */
+[role="group"][aria-label="Content Editor"] .sidebar:has([role="radiogroup"][aria-label="Sidebar Panels"]) {
+  display: none !important;
 }

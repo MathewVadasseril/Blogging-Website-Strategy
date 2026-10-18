@@ -9,6 +9,11 @@ backend:
     update: "Update {{collection}} “{{slug}}”"
     delete: "Delete {{collection}} “{{slug}}”"
 
+# Drafts: "Save" keeps work as a draft on GitHub (in the Workflow board) until it's
+# published or deleted, so work can be picked up again days later on any device.
+# Publishing merges the draft into the branch above and the site redeploys.
+publish_mode: editorial_workflow
+
 media_folder: images/uploads
 public_folder: images/uploads
 
@@ -38,7 +43,7 @@ collections:
   - name: booklets
     label: Strategy Booklets
     label_singular: Booklet
-    description: Structured five-chapter booklets. Text fields accept Markdown such as **bold** and *italic*.
+    description: Booklets made of chapters you can add, rename, reorder and build from blocks.
     folder: content/booklets
     format: json
     extension: json
@@ -344,6 +349,8 @@ collections:
   # ---------------------------------------------------------------- Site text
   - name: settings
     label: Site Settings
+    # Single-file sections can't use drafts, so Site Settings saves directly.
+    publish_mode: simple
     description: Text on the home page, header and footer.
     format: json
     files:
