@@ -1,65 +1,268 @@
-/* Colour-coded fields for the /admin editor, so each kind of field is easy to spot.
-   Every field gets a coloured stripe, a soft tint and a matching dot by its name;
-   the text itself keeps the editor's normal colour.
+/* =====================================================================
+   Editor theme for /admin: "the apartment".
+   Warm ivory and cream rooms, burgundy and walnut accents, brass details,
+   and soft layered shadows for depth. In dark mode it becomes an espresso
+   lounge. The site preview sits in a dark walnut frame so it reads as a
+   separate screen and never blends into the editing side.
 
-     Blue    titles and short single-line text   (string)
-     Green   body text with a toolbar            (markdown)
-     Purple  lists – each item is its own card   (list)
-     Amber   grouped sections                    (object)
-     Pink    images                              (image, file)
-     Grey    settings                            (select, boolean, number, date)
+   Field colours (stripe, tint and the diamond by each field's name):
+     Burgundy    titles and short text        (string)
+     Sage        formatted body text          (markdown)
+     Walnut      lists: chapters, blocks…     (list)
+     Brass       grouped sections             (object)
+     Terracotta  images                       (image, file)
+     Taupe       settings                     (select, boolean, number, date)
+   ===================================================================== */
 
-   Tints are translucent so they read on both the light and dark editor themes. */
+/* ---------------------------------------------------------------- palette */
+:root {
+  --apt-serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --apt-sans: "Manrope", "Source Sans 3", system-ui, sans-serif;
 
+  --apt-burgundy: #7a2334;
+  --apt-burgundy-deep: #4a1420;
+  --apt-sage: #6e7b4f;
+  --apt-walnut: #7a5333;
+  --apt-brass: #a8843a;
+  --apt-terracotta: #b4613f;
+  --apt-taupe: #8a7a6a;
+
+  --apt-card: #fffbf4;          /* ivory: field cards */
+  --apt-room: #efe5d5;          /* linen: the edit pane's walls */
+  --apt-frame: #3a2a22;         /* walnut: the preview frame */
+  --apt-ink: #2a1c15;
+  --apt-glow: rgba(255, 246, 228, 0.65);   /* warm light falling into the edit pane */
+  --apt-line: rgba(90, 58, 38, 0.14);
+  --apt-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset,
+                0 2px 6px -2px rgba(60, 32, 18, 0.12),
+                0 12px 28px -16px rgba(60, 32, 18, 0.35);
+  --apt-shadow-soft: 0 1px 3px rgba(60, 32, 18, 0.08), 0 6px 14px -10px rgba(60, 32, 18, 0.25);
+}
+
+:root[data-theme="dark"] {
+  --apt-burgundy: #c46a79;
+  --apt-burgundy-deep: #3a0f19;
+  --apt-sage: #a3b07f;
+  --apt-walnut: #c09166;
+  --apt-brass: #d6b264;
+  --apt-terracotta: #dd8d6c;
+  --apt-taupe: #ad9c8a;
+
+  --apt-card: #2a1f1a;
+  --apt-room: #1f1713;
+  --apt-frame: #120c0a;
+  --apt-ink: #f6ecdf;
+  --apt-glow: rgba(196, 106, 121, 0.07);
+  --apt-line: rgba(246, 236, 223, 0.10);
+  --apt-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset,
+                0 2px 6px -2px rgba(0, 0, 0, 0.5),
+                0 14px 30px -16px rgba(0, 0, 0, 0.7);
+  --apt-shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.4), 0 6px 14px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* ------------------------------------------- the editor's own theme colours
+   Sveltia builds every surface, text and border colour from these, so the
+   whole interface (lists, menus, dialogs, inputs) takes on the palette. */
+:root[data-theme="light"] {
+  --sui-font-family-default: var(--apt-sans) !important;
+  --sui-background-color-1-hsl: 38 100% 98% !important;
+  --sui-background-color-2-hsl: 37 56% 94% !important;
+  --sui-background-color-3-hsl: 37 45% 89% !important;
+  --sui-background-color-4-hsl: 36 41% 82% !important;
+  --sui-background-color-5-hsl: 35 33% 71% !important;
+  --sui-foreground-color-1-hsl: 20 33% 12% !important;
+  --sui-foreground-color-2-hsl: 21 28% 18% !important;
+  --sui-foreground-color-3-hsl: 22 27% 24% !important;
+  --sui-foreground-color-4-hsl: 23 23% 34% !important;
+  --sui-foreground-color-5-hsl: 26 17% 52% !important;
+  --sui-border-color-1-hsl: 25 17% 48% !important;
+  --sui-border-color-2-hsl: 31 25% 63% !important;
+  --sui-border-color-3-hsl: 34 34% 77% !important;
+  --sui-shadow-color: 20 40% 15% !important;
+  --sui-primary-accent-color-text: #7a2334 !important;
+  --sui-primary-accent-color-light: #8f2c40 !important;
+  --sui-primary-accent-color: #7a2334 !important;
+  --sui-primary-accent-color-dark: #5e1a28 !important;
+  --sui-primary-accent-color-inverted: #fffbf4 !important;
+  --sui-primary-accent-color-translucent: rgba(122, 35, 52, 0.55) !important;
+  --sui-primary-accent-color-translucent-light: rgba(122, 35, 52, 0.30) !important;
+}
+
+:root[data-theme="dark"] {
+  --sui-font-family-default: var(--apt-sans) !important;
+  --sui-background-color-1-hsl: 19 24% 13% !important;
+  --sui-background-color-2-hsl: 20 24% 10% !important;
+  --sui-background-color-3-hsl: 21 24% 16% !important;
+  --sui-background-color-4-hsl: 20 24% 20% !important;
+  --sui-background-color-5-hsl: 24 24% 28% !important;
+  --sui-foreground-color-1-hsl: 34 56% 92% !important;
+  --sui-foreground-color-2-hsl: 35 45% 85% !important;
+  --sui-foreground-color-3-hsl: 34 33% 75% !important;
+  --sui-foreground-color-4-hsl: 31 23% 63% !important;
+  --sui-foreground-color-5-hsl: 28 16% 47% !important;
+  --sui-border-color-1-hsl: 28 16% 47% !important;
+  --sui-border-color-2-hsl: 25 22% 35% !important;
+  --sui-border-color-3-hsl: 23 23% 25% !important;
+  --sui-shadow-color: 20 40% 2% !important;
+  --sui-primary-accent-color-text: #d98a97 !important;
+  --sui-primary-accent-color-light: #d07c8a !important;
+  --sui-primary-accent-color: #c46a79 !important;
+  --sui-primary-accent-color-dark: #a85565 !important;
+  --sui-primary-accent-color-inverted: #1f1713 !important;
+  --sui-primary-accent-color-translucent: rgba(196, 106, 121, 0.55) !important;
+  --sui-primary-accent-color-translucent-light: rgba(196, 106, 121, 0.30) !important;
+}
+
+/* ------------------------------------------------------------- top bar */
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) {
+  background: linear-gradient(100deg, var(--apt-burgundy-deep), #6f1d2c 55%, #5a1a26) !important;
+  border-bottom: 1px solid rgba(168, 132, 58, 0.55) !important;   /* a brass line */
+  box-shadow: 0 6px 18px -10px rgba(40, 10, 16, 0.8);
+  /* light text and icons on the burgundy band */
+  --sui-foreground-color-1-hsl: 38 70% 95%;
+  --sui-foreground-color-2-hsl: 38 55% 90%;
+  --sui-foreground-color-3-hsl: 38 45% 85%;
+  --sui-foreground-color-4-hsl: 38 35% 80%;
+  --sui-hover-background-color: rgba(255, 240, 220, 0.12);
+  color: #fbf3e6;
+}
+
+/* Cream icons and buttons on the burgundy band; the selected one gets a soft highlight. */
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) :is(button, [role="button"], [role="radio"]) {
+  color: #f6eadb !important;
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"])
+  :is([aria-pressed="true"], [aria-checked="true"], [aria-selected="true"]) {
+  background: rgba(255, 240, 220, 0.18) !important;
+  color: #fffaf2 !important;
+}
+/* The Save button is brass, so the most important action stands out on the band. */
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.button.primary {
+  background: linear-gradient(180deg, #e2c27a, #b38f45) !important;
+  border-color: #9c7a35 !important;
+  color: #2a1c15 !important;
+  font-weight: 700;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 4px 12px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ------------------------------------------------- pane headers ("Edit", "Preview") */
+[role="toolbar"][aria-label="Secondary"] {
+  font-family: var(--apt-serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------- the edit pane: a warm room */
+[role="group"][aria-label="Edit Content"] {
+  background:
+    radial-gradient(120% 60% at 0% 0%, var(--apt-glow), transparent 60%),
+    var(--apt-room) !important;
+}
+
+/* ------------------------------------------- the preview pane: a framed screen */
+[role="group"][aria-label="Preview Content"] {
+  background:
+    radial-gradient(90% 50% at 50% 0%, rgba(168, 132, 58, 0.18), transparent 70%),
+    var(--apt-frame) !important;
+}
+[role="group"][aria-label="Preview Content"] [role="toolbar"][aria-label="Secondary"] {
+  background: transparent !important;
+  color: #e9d9c2;
+  --sui-foreground-color-1-hsl: 36 50% 88%;
+  --sui-foreground-color-2-hsl: 36 40% 82%;
+  --sui-foreground-color-3-hsl: 36 30% 75%;
+}
+[role="group"][aria-label="Preview Content"] .content {
+  padding: 14px 18px 18px !important;
+}
+[role="group"][aria-label="Preview Content"] iframe.preview {
+  border-radius: 14px;
+  border: 1px solid rgba(214, 178, 100, 0.35) !important;   /* brass bezel */
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.03), 0 24px 50px -20px rgba(0, 0, 0, 0.75);
+  background: transparent;
+}
+
+/* ------------------------------------------------------------ fields as cards */
 section.field {
-  --field-accent: #94a3b8;
-  --field-tint: rgba(148, 163, 184, 0.08);
-  border-left: 4px solid var(--field-accent) !important;
-  background: var(--field-tint);
-  border-radius: 10px;
-  padding: 12px 14px !important;
-  margin-block: 10px !important;
+  --field-accent: var(--apt-taupe);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--field-accent) 7%, var(--apt-card)), var(--apt-card) 70%) !important;
+  border: 1px solid var(--apt-line) !important;
+  border-left: 3px solid var(--field-accent) !important;
+  border-radius: 14px;
+  padding: 14px 16px !important;
+  margin-block: 12px !important;
+  box-shadow: var(--apt-shadow);
 }
 
-section.field[data-field-type="string"]   { --field-accent: #3b82f6; --field-tint: rgba(59, 130, 246, 0.08); }
-section.field[data-field-type="markdown"] { --field-accent: #10b981; --field-tint: rgba(16, 185, 129, 0.08); }
-section.field[data-field-type="list"]     { --field-accent: #8b5cf6; --field-tint: rgba(139, 92, 246, 0.07); }
-section.field[data-field-type="object"]   { --field-accent: #f59e0b; --field-tint: rgba(245, 158, 11, 0.08); }
-section.field:is([data-field-type="image"], [data-field-type="file"]) {
-  --field-accent: #ec4899; --field-tint: rgba(236, 72, 153, 0.07);
-}
+section.field[data-field-type="string"]   { --field-accent: var(--apt-burgundy); }
+section.field[data-field-type="markdown"] { --field-accent: var(--apt-sage); }
+section.field[data-field-type="list"]     { --field-accent: var(--apt-walnut); }
+section.field[data-field-type="object"]   { --field-accent: var(--apt-brass); }
+section.field:is([data-field-type="image"], [data-field-type="file"]) { --field-accent: var(--apt-terracotta); }
 section.field:is([data-field-type="select"], [data-field-type="boolean"], [data-field-type="number"],
-                 [data-field-type="datetime"], [data-field-type="hidden"]) {
-  --field-accent: #64748b; --field-tint: rgba(100, 116, 139, 0.07);
-}
+                 [data-field-type="datetime"], [data-field-type="hidden"]) { --field-accent: var(--apt-taupe); }
 
-/* A dot in the field's colour before its name. */
+/* Field names in an elegant serif, marked with a small diamond in the field's colour. */
+section.field > header h4 {
+  font-family: var(--apt-serif) !important;
+  font-size: 1.18rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em;
+  color: var(--apt-ink);
+}
 section.field > header h4::before {
   content: "";
   display: inline-block;
-  width: 9px;
-  height: 9px;
-  margin-right: 8px;
-  border-radius: 50%;
+  width: 7px;
+  height: 7px;
+  margin-right: 10px;
   background: var(--field-accent);
-  vertical-align: 0.05em;
+  vertical-align: 0.12em;
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--field-accent) 22%, transparent);
 }
 
-/* Each item in a list (a chapter, a block, a card…) sits on its own card. */
+/* Fields inside a list item sit a little lower, so the nesting reads clearly. */
+section.field .item section.field {
+  box-shadow: var(--apt-shadow-soft);
+}
+
+/* Inputs and text boxes: ivory, with a burgundy glow when focused. */
+section.field :is(input[type="text"], input:not([type]), textarea, [contenteditable="true"]) {
+  background: var(--apt-card);
+}
+section.field :is(.sui.text-input, .sui.text-area):focus-within {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--apt-burgundy) 18%, transparent);
+  border-radius: 6px;
+}
+
+/* ------------------------------------------- list items: each on its own card */
 section.field[data-field-type="list"] .item {
-  background: var(--sui-primary-background-color, #fff);
-  border: 1px solid rgba(139, 92, 246, 0.28);
-  border-radius: 10px;
-  margin-block: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  background: color-mix(in srgb, var(--apt-walnut) 4%, var(--apt-card)) !important;
+  border: 1px solid color-mix(in srgb, var(--apt-walnut) 28%, transparent);
+  border-radius: 14px;
+  margin-block: 10px;
+  box-shadow: var(--apt-shadow);
+  overflow: hidden;
 }
-
-/* The item's header bar (its type name, drag handle and menu) takes the list colour. */
+/* The item's header band (its type name, drag handle and menu). */
 section.field[data-field-type="list"] .item > .header {
-  background: rgba(139, 92, 246, 0.14) !important;
-  border-radius: 9px 9px 0 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--apt-walnut) 22%, var(--apt-card)),
+                                     color-mix(in srgb, var(--apt-walnut) 6%, var(--apt-card))) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--apt-walnut) 20%, transparent);
+  font-family: var(--apt-serif);
+  font-size: 1.05rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
 }
 section.field[data-field-type="list"] .item > .item-body {
-  padding: 2px 10px 10px;
+  padding: 4px 12px 12px;
+}
+
+/* --------------------------------------------------------------- buttons */
+.sui.button.primary {
+  background: linear-gradient(180deg, #8f2c40, var(--apt-burgundy)) !important;
+  border-color: var(--apt-burgundy) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 4px 10px -4px rgba(74, 20, 32, 0.6);
 }

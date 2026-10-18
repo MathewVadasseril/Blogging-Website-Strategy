@@ -141,10 +141,16 @@ const sitePreview = kind => createClass({
       title: 'Preview of the live site',
       ref: el => { this.frame = el; },
       onLoad: () => { this.loaded = true; this.send(); },
-      style: { width: '100%', height: 'calc(100vh - 120px)', minHeight: '600px', border: 0, display: 'block' },
+      style: { width: '100%', height: '100vh', border: 0, display: 'block' },
     });
   },
 });
+
+// Let the site fill the whole preview pane: no padding or white page around it.
+CMS.registerPreviewStyle(`
+  html, body { margin: 0; height: 100%; background: transparent !important; }
+  body > div, [role="document"] { padding: 0 !important; height: 100%; }
+`, { raw: true });
 
 CMS.registerPreviewTemplate('posts', sitePreview('posts'));
 CMS.registerPreviewTemplate('booklets', sitePreview('booklets'));
