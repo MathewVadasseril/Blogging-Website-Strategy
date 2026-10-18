@@ -1,0 +1,65 @@
+/* Colour-coded fields for the /admin editor, so each kind of field is easy to spot.
+   Every field gets a coloured stripe, a soft tint and a matching dot by its name;
+   the text itself keeps the editor's normal colour.
+
+     Blue    titles and short single-line text   (string)
+     Green   body text with a toolbar            (markdown)
+     Purple  lists – each item is its own card   (list)
+     Amber   grouped sections                    (object)
+     Pink    images                              (image, file)
+     Grey    settings                            (select, boolean, number, date)
+
+   Tints are translucent so they read on both the light and dark editor themes. */
+
+section.field {
+  --field-accent: #94a3b8;
+  --field-tint: rgba(148, 163, 184, 0.08);
+  border-left: 4px solid var(--field-accent) !important;
+  background: var(--field-tint);
+  border-radius: 10px;
+  padding: 12px 14px !important;
+  margin-block: 10px !important;
+}
+
+section.field[data-field-type="string"]   { --field-accent: #3b82f6; --field-tint: rgba(59, 130, 246, 0.08); }
+section.field[data-field-type="markdown"] { --field-accent: #10b981; --field-tint: rgba(16, 185, 129, 0.08); }
+section.field[data-field-type="list"]     { --field-accent: #8b5cf6; --field-tint: rgba(139, 92, 246, 0.07); }
+section.field[data-field-type="object"]   { --field-accent: #f59e0b; --field-tint: rgba(245, 158, 11, 0.08); }
+section.field:is([data-field-type="image"], [data-field-type="file"]) {
+  --field-accent: #ec4899; --field-tint: rgba(236, 72, 153, 0.07);
+}
+section.field:is([data-field-type="select"], [data-field-type="boolean"], [data-field-type="number"],
+                 [data-field-type="datetime"], [data-field-type="hidden"]) {
+  --field-accent: #64748b; --field-tint: rgba(100, 116, 139, 0.07);
+}
+
+/* A dot in the field's colour before its name. */
+section.field > header h4::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--field-accent);
+  vertical-align: 0.05em;
+}
+
+/* Each item in a list (a chapter, a block, a card…) sits on its own card. */
+section.field[data-field-type="list"] .item {
+  background: var(--sui-primary-background-color, #fff);
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: 10px;
+  margin-block: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* The item's header bar (its type name, drag handle and menu) takes the list colour. */
+section.field[data-field-type="list"] .item > .header {
+  background: rgba(139, 92, 246, 0.14) !important;
+  border-radius: 9px 9px 0 0;
+  font-weight: 600;
+}
+section.field[data-field-type="list"] .item > .item-body {
+  padding: 2px 10px 10px;
+}
