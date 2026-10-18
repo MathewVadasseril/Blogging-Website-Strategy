@@ -296,3 +296,53 @@ section.field[data-field-type="list"] .item > .item-body {
   margin-left: 0.15em;
   white-space: normal;
 }
+
+/* ------------------------------------------------- search box on the top bar
+   A frosted pill with a thin brass outline; it lights up to ivory while typing. */
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar .sui.text-input {
+  border-radius: 999px !important;
+  border: 1px solid rgba(214, 178, 100, 0.6) !important;
+  background: linear-gradient(180deg, rgba(255, 246, 230, 0.16), rgba(255, 246, 230, 0.07)) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar .sui.text-input:hover {
+  border-color: rgba(226, 194, 122, 0.85) !important;
+  background: linear-gradient(180deg, rgba(255, 246, 230, 0.22), rgba(255, 246, 230, 0.1)) !important;
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar input {
+  background: transparent !important;
+  color: #fbf3e6 !important;
+  font-family: var(--apt-sans) !important;
+  letter-spacing: 0.01em;
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar input::placeholder {
+  font-family: var(--apt-serif);
+  font-style: italic;
+  font-size: 1.08em;
+  color: rgba(246, 234, 219, 0.78);
+  opacity: 1;
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar .sui.icon {
+  color: #e2c27a !important;   /* brass magnifier */
+}
+/* While typing: an ivory field with dark text and a soft brass glow. */
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar .sui.text-input:focus-within {
+  background: #fffaf2 !important;
+  border-color: #d6b264 !important;
+  box-shadow: 0 0 0 3px rgba(214, 178, 100, 0.28), 0 6px 18px -8px rgba(0, 0, 0, 0.5) !important;
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar .sui.text-input:focus-within input {
+  color: #2a1c15 !important;
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar .sui.text-input:focus-within input::placeholder {
+  color: rgba(106, 82, 67, 0.75);
+}
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar:focus-within .sui.icon {
+  color: #7a2334 !important;
+}
+/* The brass glow replaces the editor's default rectangular focus ring here. */
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar :is(.sui.text-input, input),
+[role="toolbar"]:is([aria-label="Primary"], [aria-label="Global"]) .sui.search-bar :is(.sui.text-input, input):is(:focus, :focus-visible, :focus-within) {
+  outline: none !important;
+}
