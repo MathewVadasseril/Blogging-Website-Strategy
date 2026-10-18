@@ -224,3 +224,100 @@ const asideObserver = new MutationObserver(records => {
   });
 });
 asideObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+/* ------------------------------------------------------------------ 4. Publish confirmation
+   Site Settings changes go live straight away, so publishing them asks for confirmation:
+   the admin has to type "admin" and press Enter. Styled by .apt-modal in editor.css.
+
+   PREVIEW_CONFIRM_ON_LOAD shows the dialog once when /admin opens, as a preview of how it
+   looks; confirming it there publishes nothing. */
+const PREVIEW_CONFIRM_ON_LOAD = true;
+const CONFIRM_WORD = 'admin';
+
+function confirmPublish({ preview = false } = {}) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'apt-modal';
+    overlay.innerHTML = `
+      <div class="apt-modal__card" role="alertdialog" aria-modal="true" aria-labelledby="apt-modal-title" aria-describedby="apt-modal-text">
+        <div class="apt-modal__seal" aria-hidden="true">!</div>
+        <h2 id="apt-modal-title" class="apt-modal__title">Publish to the live site?</h2>
+        <p id="apt-modal-text" class="apt-modal__text">
+          Are you sure you want to publish it? Any changes you've made will go live in production right away.
+        </p>
+        <label class="apt-modal__label" for="apt-modal-input">Type <strong>${CONFIRM_WORD}</strong> and press Enter to publish</label>
+        <input id="apt-modal-input" class="apt-modal__input" type="text" autocomplete="off" spellcheck="false" placeholder="${CONFIRM_WORD}" />
+        <p class="apt-modal__hint" aria-live="polite"></p>
+        <div class="apt-modal__actions">
+          <button type="button" class="apt-modal__cancel">Cancel</button>
+          <button type="button" class="apt-modal__publish" disabled>Publish</button>
+        </div>
+        ${preview ? '<p class="apt-modal__note">Preview of the confirmation. Nothing will be published from here.</p>' : ''}
+      </div>`;
+    document.body.append(overlay);
+    const input = overlay.querySelector('.apt-modal__input');
+    const publishBtn = overlay.querySelector('.apt-modal__publish');
+    const hint = overlay.querySelector('.apt-modal__hint');
+    const matches = () => input.value.trim().toLowerCase() === CONFIRM_WORD;
+
+    const close = result => {
+      overlay.classList.add('is-closing');
+      setTimeout(() => overlay.remove(), 180);
+      resolve(result);
+    };
+    const tryPublish = () => {
+      if (matches()) close(true);
+      else { hint.textContent = `Type “${CONFIRM_WORD}” exactly to publish.`; input.classList.add('is-wrong'); input.focus(); }
+    };
+
+    input.addEventListener('input', () => {
+      publishBtn.disabled = !matches();
+      input.classList.remove('is-wrong');
+      hint.textContent = '';
+    });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); tryPublish(); } });
+    publishBtn.addEventListener('click', tryPublish);
+    overlay.querySelector('.apt-modal__cancel').addEventListener('click', () => close(false));
+    overlay.addEventListener('mousedown', e => { if (e.target === overlay) close(false); });
+    // Escape cancels; keystrokes in the dialog don't reach the editor's own shortcuts.
+    overlay.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { e.preventDefault(); close(false); }
+      e.stopPropagation();
+    });
+    requestAnimationFrame(() => { overlay.classList.add('is-open'); input.focus(); });
+  });
+}
+
+function toast(message) {
+  const t = document.createElement('div');
+  t.className = 'apt-toast';
+  t.setAttribute('role', 'status');
+  t.textContent = message;
+  document.body.append(t);
+  requestAnimationFrame(() => t.classList.add('is-open'));
+  setTimeout(() => { t.classList.remove('is-open'); setTimeout(() => t.remove(), 300); }, 3200);
+}
+
+if (PREVIEW_CONFIRM_ON_LOAD) {
+  window.addEventListener('load', () => setTimeout(async () => {
+    const confirmed = await confirmPublish({ preview: true });
+    toast(confirmed ? 'Confirmed. This was only a preview, so nothing was published.' : 'Cancelled. Nothing was published.');
+  }, 1200));
+}
+
+/* ------------------------------------------------------------------ 5. "Publish" on Site Settings
+   Site Settings has no drafts, so its Save button is relabelled "Publish". */
+function relabelSettingsSave() {
+  if (!location.hash.startsWith('#/collections/settings/')) return;
+  const bar = document.querySelector('[role="toolbar"][aria-label="Primary"]');
+  bar?.querySelectorAll('button.primary, .sui.button.primary').forEach(btn => {
+    const walker = document.createTreeWalker(btn, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const t = walker.currentNode;
+      if (t.data.trim() === 'Save') t.data = t.data.replace('Save', 'Publish');
+    }
+  });
+}
+new MutationObserver(() => requestAnimationFrame(relabelSettingsSave))
+  .observe(document.body, { childList: true, subtree: true, characterData: true });
+window.addEventListener('hashchange', relabelSettingsSave);
