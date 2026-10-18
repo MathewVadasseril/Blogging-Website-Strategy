@@ -153,7 +153,9 @@ CMS.registerPreviewStyle(`
 `, { raw: true });
 
 CMS.registerPreviewTemplate('posts', sitePreview('posts'));
+CMS.registerPreviewTemplate('post_drafts', sitePreview('posts'));
 CMS.registerPreviewTemplate('booklets', sitePreview('booklets'));
+CMS.registerPreviewTemplate('booklet_drafts', sitePreview('booklets'));
 CMS.registerPreviewTemplate('site', sitePreview('settings'));
 
 /* ------------------------------------------------------------------ 3. Bracketed notes

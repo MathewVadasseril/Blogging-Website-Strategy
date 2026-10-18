@@ -9,10 +9,9 @@ backend:
     update: "Update {{collection}} “{{slug}}”"
     delete: "Delete {{collection}} “{{slug}}”"
 
-# Drafts: "Save" keeps work as a draft on GitHub (in the Workflow board) until it's
-# published or deleted, so work can be picked up again days later on any device.
-# Publishing merges the draft into the branch above and the site redeploys.
-publish_mode: editorial_workflow
+# Drafts: every post and booklet has a "Draft" switch, on by default. Entries with it on
+# are hidden from the site and listed under "Drafts" in the editor's sidebar; switching
+# it off and saving publishes the entry. Drafts stay until they're deleted.
 
 media_folder: images/uploads
 public_folder: images/uploads
@@ -22,7 +21,7 @@ collections:
   - name: posts
     label: Blog Posts
     label_singular: Blog Post
-    description: Free-form articles written in Markdown.
+    description: Published articles. Drafts are listed under Drafts below.
     folder: content/posts
     format: json
     extension: json
@@ -31,19 +30,20 @@ collections:
     identifier_field: title
     summary: "{{title}} · {{date}}"
     sortable_fields: [date, title]
-    fields:
+    filter: { field: draft, value: [false, null] }   # published only
+    fields: &post_fields
       - { name: title, label: Title, widget: string }
       - { name: date, label: Publish date, widget: datetime, time_format: false, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
       - { name: summary, label: Summary, widget: markdown, minimal: true, buttons: [bold, italic, strikethrough, link, code], editor_components: [], hint: "One or two sentences shown on the home page." }
       - { name: topics, label: Topics, widget: list, hint: "Comma-separated, e.g. Growth Strategy, Pricing. These power the topic filters." }
-      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: false, required: false }
+      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: true, required: false, hint: "Switch off and save to publish it on the site." }
       - { name: body, label: Article, widget: markdown }
 
   # ---------------------------------------------------------------- Booklets
   - name: booklets
     label: Strategy Booklets
     label_singular: Booklet
-    description: Booklets made of chapters you can add, rename, reorder and build from blocks.
+    description: Published booklets, made of chapters you can add, rename, reorder and build from blocks. Drafts are listed under Drafts below.
     folder: content/booklets
     format: json
     extension: json
@@ -51,7 +51,8 @@ collections:
     slug: "{{slug}}"
     identifier_field: title
     sortable_fields: [order, title]
-    fields:
+    filter: { field: draft, value: [false, null] }   # published only
+    fields: &booklet_fields
       - { name: title, label: Title, widget: string }
       - { name: subtitle, label: Subtitle, widget: markdown, minimal: true, buttons: [bold, italic, strikethrough, link, code], editor_components: [] }
       - { name: volume, label: Volume label, widget: string, hint: "e.g. Vol. 03" }
@@ -86,7 +87,7 @@ collections:
           - { label: Emerald → Teal, value: from-emerald-500 to-teal-600 }
           - { label: Rose → Pink, value: from-rose-500 to-pink-600 }
           - { label: Slate → Zinc, value: from-slate-500 to-zinc-700 }
-      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: false, required: false }
+      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: true, required: false, hint: "Switch off and save to publish it on the site." }
 
       - label: Chapters
         label_singular: Chapter
@@ -346,11 +347,43 @@ collections:
                       - { name: pct, label: Percent, widget: number, value_type: int }
                   - { name: milestones, label: Milestones, widget: list, field: { name: milestone, label: Milestone, widget: string } }
 
+  # ---------------------------------------------------------------- Drafts
+  # The same posts and booklets, showing only those with Draft switched on.
+  - divider: true
+  - name: post_drafts
+    label: Draft Posts
+    label_singular: Draft Post
+    description: Posts with Draft switched on, hidden from the site. Switch Draft off and save to publish.
+    folder: content/posts
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} · {{date}}"
+    sortable_fields: [date, title]
+    filter: { field: draft, value: true }
+    fields: *post_fields
+
+  - name: booklet_drafts
+    label: Draft Booklets
+    label_singular: Draft Booklet
+    description: Booklets with Draft switched on, hidden from the site. Switch Draft off and save to publish.
+    folder: content/booklets
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    sortable_fields: [order, title]
+    filter: { field: draft, value: true }
+    fields: *booklet_fields
+
+  - divider: true
+
   # ---------------------------------------------------------------- Site text
   - name: settings
     label: Site Settings
-    # Single-file sections can't use drafts, so Site Settings saves directly.
-    publish_mode: simple
     description: Text on the home page, header and footer.
     format: json
     files:
