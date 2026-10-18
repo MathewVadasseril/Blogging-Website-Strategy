@@ -157,10 +157,11 @@ CMS.registerPreviewTemplate('booklets', sitePreview('booklets'));
 CMS.registerPreviewTemplate('site', sitePreview('settings'));
 
 /* ------------------------------------------------------------------ 3. Bracketed notes
-   Text in brackets in a field's name, such as "Icon (Font Awesome name, e.g. fa-bolt)",
+   Text in brackets in field names and in chapter/block headers, such as
+   "Icon (Font Awesome name, e.g. fa-bolt)" or "Build your own (stack blocks in any order)",
    is shown smaller in a quieter style (see .apt-aside in editor.css) so the main label
-   stands out. Only field names are touched: not headers, menus or anything you type. */
-const ASIDE_SCOPE = 'section.field > header h4';
+   stands out. Menus and anything you type are not touched. */
+const ASIDE_SCOPE = 'section.field > header h4, section.field[data-field-type="list"] .item > .header';
 const HAS_BRACKETS = /\([^()]*\)/;
 const added = new WeakMap();    // split text node -> the nodes added after it
 const ownText = new WeakMap();  // split text node -> the text this script left in it

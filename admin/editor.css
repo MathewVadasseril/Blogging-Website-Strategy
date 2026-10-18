@@ -282,7 +282,7 @@ section.field[data-field-type="list"] .item > .item-body {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 4px 12px -4px rgba(0, 0, 0, 0.6);
 }
 
-/* ------------------------------------------------------- bracketed notes in field names
+/* --------------------------------- bracketed notes in field names and chapter/block headers
    "Icon (Font Awesome name, e.g. fa-bolt)": the part in brackets is a quiet aside,
    smaller, in the clean sans-serif and a softer colour, beside the serif label. */
 .apt-aside {
