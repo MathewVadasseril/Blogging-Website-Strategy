@@ -29,9 +29,10 @@ changes), put `[skip netlify]` in the commit message.
 
 - **Posts and booklets:** write them at https://mathewvadasseril.github.io/msv-blogs/admin/.
   - Every post and booklet has a **Draft** switch, **on by default**. Saving with it on keeps the entry hidden from the site and lists it under **Drafts** in the editor's sidebar (**Draft Posts**, **Draft Booklets**). Open one there to keep editing, with the live preview.
-  - **To publish:** switch **Draft** off and **Save**. The entry moves to **Blog Posts** / **Strategy Booklets** and the live site updates a minute or two later. Switching Draft back on hides it again.
+  - The main button reads **Save** while Draft is on and **Publish** when it's off.
+  - **To publish:** switch **Draft** off and click **Publish**. A confirmation asks you to type **admin** and press Enter; then the entry moves to **Blog Posts** / **Strategy Booklets** and the live site updates a minute or two later. Switching Draft back on and saving hides it again.
   - Drafts stay until you delete them. The browser also backs up unsaved typing and offers to restore it.
-  - **Site Settings** has no Draft switch: Save publishes it straight away.
+  - **Site Settings** has no Draft switch: its button reads **Publish**, and it asks for the same **admin** confirmation before going live.
 - **Small fixes** (copy, a button, a style tweak): commit directly to `main`.
 
 ### Major design changes or new features → through `develop`
@@ -65,6 +66,7 @@ When no major change is in progress, `develop` sits idle and falls behind `main`
 - `admin/editor.css` is the editor's theme: an earth palette (ivory, cream and linen surfaces; burgundy, walnut, sage, brass and terracotta accents) with layered shadows, serif field names, a burgundy top bar, and the preview set in a dark walnut frame. Fields are colour-coded by type: burgundy for titles and short text, sage for formatted text, walnut for lists, brass for grouped sections, terracotta for images and taupe for settings. Dark mode uses an espresso version of the same palette.
 - `admin/editor.js` adds the editor's toolbar widgets and live previews:
   - **Widgets** (callout, cards, table, number tiles, timeline, list box) inserted from a text box's **Insert** menu are saved in the Markdown as ` ```msv-block ` fences holding JSON. `index.html` draws them with the same renderers as "Build your own" blocks.
+  - **Publish confirmation:** whenever the main button would publish (Site Settings, or a post/booklet with Draft off), by click or Cmd/Ctrl+S, a dialog asks for the word `admin` first. Saving drafts doesn't ask.
   - **Previews** load the real site at `index.html#preview` and send it the entry being edited with `postMessage`, so the preview matches the live design.
 
 ### Preview locally

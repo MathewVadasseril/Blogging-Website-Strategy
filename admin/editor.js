@@ -226,12 +226,8 @@ const asideObserver = new MutationObserver(records => {
 asideObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
 
 /* ------------------------------------------------------------------ 4. Publish confirmation
-   Site Settings changes go live straight away, so publishing them asks for confirmation:
-   the admin has to type "admin" and press Enter. Styled by .apt-modal in editor.css.
-
-   PREVIEW_CONFIRM_ON_LOAD shows the dialog once when /admin opens, as a preview of how it
-   looks; confirming it there publishes nothing. */
-const PREVIEW_CONFIRM_ON_LOAD = true;
+   Anything about to go live asks for confirmation first: the admin has to type "admin"
+   and press Enter. Styled by .apt-modal in editor.css; wired up in section 5. */
 const CONFIRM_WORD = 'admin';
 
 function confirmPublish({ preview = false } = {}) {
@@ -298,26 +294,65 @@ function toast(message) {
   setTimeout(() => { t.classList.remove('is-open'); setTimeout(() => t.remove(), 300); }, 3200);
 }
 
-if (PREVIEW_CONFIRM_ON_LOAD) {
-  window.addEventListener('load', () => setTimeout(async () => {
-    const confirmed = await confirmPublish({ preview: true });
-    toast(confirmed ? 'Confirmed. This was only a preview, so nothing was published.' : 'Cancelled. Nothing was published.');
-  }, 1200));
+/* ------------------------------------------------------------------ 5. Save vs Publish
+   Posts and booklets: the main button reads "Save" while Draft is on and "Publish" when
+   it's off. Site Settings has no drafts, so it always reads "Publish". Whenever the
+   button would publish (by click or Cmd/Ctrl+S), the confirmation above appears first;
+   saving a draft goes straight through. */
+const PUBLISHABLE = /^#\/collections\/(posts|booklets|post_drafts|booklet_drafts)\/(new|entries\/)/;
+
+const saveButton = () =>
+  document.querySelector('[role="toolbar"][aria-label="Primary"] .sui.button.primary');
+
+function willPublish() {
+  if (location.hash.startsWith('#/collections/settings/')) return true;
+  if (!PUBLISHABLE.test(location.hash)) return false;
+  const draft = document.querySelector('section.field[data-key-path="draft"] [role="switch"]');
+  return !!draft && draft.getAttribute('aria-checked') !== 'true';
 }
 
-/* ------------------------------------------------------------------ 5. "Publish" on Site Settings
-   Site Settings has no drafts, so its Save button is relabelled "Publish". */
-function relabelSettingsSave() {
-  if (!location.hash.startsWith('#/collections/settings/')) return;
-  const bar = document.querySelector('[role="toolbar"][aria-label="Primary"]');
-  bar?.querySelectorAll('button.primary, .sui.button.primary').forEach(btn => {
-    const walker = document.createTreeWalker(btn, NodeFilter.SHOW_TEXT);
-    while (walker.nextNode()) {
-      const t = walker.currentNode;
-      if (t.data.trim() === 'Save') t.data = t.data.replace('Save', 'Publish');
-    }
-  });
+function updateSaveLabel() {
+  const btn = saveButton();
+  if (!btn) return;
+  const onEntry = location.hash.startsWith('#/collections/settings/') || PUBLISHABLE.test(location.hash);
+  const [from, to] = onEntry && willPublish() ? ['Save', 'Publish'] : ['Publish', 'Save'];
+  const walker = document.createTreeWalker(btn, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    const t = walker.currentNode;
+    if (t.data.trim() === from) t.data = t.data.replace(from, to);
+  }
 }
-new MutationObserver(() => requestAnimationFrame(relabelSettingsSave))
-  .observe(document.body, { childList: true, subtree: true, characterData: true });
-window.addEventListener('hashchange', relabelSettingsSave);
+
+let confirmedSave = false;   // lets the confirmed click through
+let confirming = false;
+
+async function guardPublish(e) {
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  if (confirming) return;
+  confirming = true;
+  const ok = await confirmPublish();
+  confirming = false;
+  if (!ok) { toast('Not published. Your changes are still here.'); return; }
+  confirmedSave = true;
+  saveButton()?.click();
+  confirmedSave = false;
+}
+
+// Clicks on the main button (capture phase, so this runs before the editor's own handler).
+document.addEventListener('click', e => {
+  const btn = e.target.closest?.('[role="toolbar"][aria-label="Primary"] .sui.button.primary');
+  if (!btn || confirmedSave || !willPublish()) return;
+  guardPublish(e);
+}, true);
+
+// The editor's Cmd/Ctrl+S save shortcut.
+window.addEventListener('keydown', e => {
+  if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 's' || e.altKey || e.shiftKey) return;
+  if (document.querySelector('.apt-modal') || !willPublish()) return;
+  guardPublish(e);
+}, true);
+
+new MutationObserver(() => requestAnimationFrame(updateSaveLabel))
+  .observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['aria-checked'] });
+window.addEventListener('hashchange', updateSaveLabel);
