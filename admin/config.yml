@@ -36,7 +36,7 @@ collections:
       - { name: date, label: Publish date, widget: datetime, time_format: false, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
       - { name: summary, label: Summary, widget: markdown, minimal: true, buttons: [bold, italic, strikethrough, link, code], editor_components: [], hint: "One or two sentences shown on the home page." }
       - { name: topics, label: Topics, widget: list, hint: "Comma-separated, e.g. Growth Strategy, Pricing. These power the topic filters." }
-      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: true, required: false, hint: "Switch off and save to publish it on the site." }
+      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: true, required: false, hint: "Switch off, then click Publish to put it on the site." }
       - { name: body, label: Article, widget: markdown }
 
   # ---------------------------------------------------------------- Booklets
@@ -87,7 +87,7 @@ collections:
           - { label: Emerald → Teal, value: from-emerald-500 to-teal-600 }
           - { label: Rose → Pink, value: from-rose-500 to-pink-600 }
           - { label: Slate → Zinc, value: from-slate-500 to-zinc-700 }
-      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: true, required: false, hint: "Switch off and save to publish it on the site." }
+      - { name: draft, label: "Draft (hide from site)", widget: boolean, default: true, required: false, hint: "Switch off, then click Publish to put it on the site." }
 
       - label: Chapters
         label_singular: Chapter
