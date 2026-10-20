@@ -7,8 +7,8 @@
   "audience": "adult",
   "readTime": 15,
   "topics": [
-    "Hello management",
-    "hello management"
+    "management",
+    "tech"
   ],
   "icon": "fa-chess-knight",
   "color": "from-sky-500 to-blue-600",
