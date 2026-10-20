@@ -1,7 +1,8 @@
 {
-  "volume": "Vol. 02",
   "title": "Value Chain Unbundling & Direct-to-Consumer Disruption",
-  "subtitle": "How challenger brands slice out the middlemen, own the customer relationship, and rewrite the economics of consumer goods.",
+  "subtitle": "How challenger brands slice out the middlemen, own the customer relationship, and rewrite the economics of consumer goods. On Team and Enterprise plans, an Owner can create cloud environments that are shared with every member of the organization.",
+  "volume": "Vol. 02",
+  "order": 2,
   "industry": "Consumer Goods & Retail",
   "audience": "Undergrad / Strategy Consultants",
   "readTime": 19,
@@ -13,7 +14,7 @@
   ],
   "icon": "fa-boxes-stacked",
   "color": "from-amber-500 to-orange-600",
-  "order": 2,
+  "draft": false,
   "chapters": [
     {
       "type": "intuition",
@@ -125,24 +126,6 @@
       "company": "Warby Parker",
       "tagline": "Turning a $95 pair of prescription glasses into a category-defining brand",
       "context": "In 2010, prescription eyewear was dominated by a vertically-integrated incumbent that owned major frame brands, retail chains and a large vision-insurance business. Retail prices of $300+ bore little relation to production costs. Consumers had never bought glasses online because they couldn't try them on.",
-      "execution": [
-        {
-          "phase": "Unbundle",
-          "text": "Designed frames in-house, sourced from the same quality of manufacturers, and sold online at a flat $95 including prescription lenses — skipping licensors and retail markups."
-        },
-        {
-          "phase": "Remove friction",
-          "text": "Home Try-On let customers order five frames for free, solving the core objection to online eyewear purchase."
-        },
-        {
-          "phase": "Brand & mission",
-          "text": "\"Buy a Pair, Give a Pair\" and PR-led launch (a GQ feature) generated a 20,000-person waitlist in the first month."
-        },
-        {
-          "phase": "Rebundle",
-          "text": "Opened 250+ physical stores with eye exams, added contacts and insurance billing — re-entering the very links of the chain it once bypassed, now on its own terms."
-        }
-      ],
       "metrics": [
         {
           "value": "$95",
@@ -159,6 +142,24 @@
         {
           "value": "~55%",
           "label": "Gross margin (approx.)"
+        }
+      ],
+      "execution": [
+        {
+          "phase": "Unbundle",
+          "text": "Designed frames in-house, sourced from the same quality of manufacturers, and sold online at a flat $95 including prescription lenses — skipping licensors and retail markups."
+        },
+        {
+          "phase": "Remove friction",
+          "text": "Home Try-On let customers order five frames for free, solving the core objection to online eyewear purchase."
+        },
+        {
+          "phase": "Brand & mission",
+          "text": "\"Buy a Pair, Give a Pair\" and PR-led launch (a GQ feature) generated a 20,000-person waitlist in the first month."
+        },
+        {
+          "phase": "Rebundle",
+          "text": "Opened 250+ physical stores with eye exams, added contacts and insurance billing — re-entering the very links of the chain it once bypassed, now on its own terms."
         }
       ],
       "drivers": [
@@ -235,8 +236,8 @@
       "type": "venture",
       "title": "Inspired Startup Idea & Financials",
       "kicker": "Venture Lab",
-      "name": "Loop Kitchen",
       "tagline": "A DTC brand selling chef-grade, refillable pantry staples in reusable steel tins via subscription.",
+      "name": "Loop Kitchen",
       "problem": "Premium pantry goods (spices, oils, grains) pass through importers, distributors and grocers — each adding margin while freshness declines. Shoppers also generate ~30 kg of single-use packaging waste per household per year from pantry items alone.",
       "solution": "Source directly from cooperatives, pack to order in a regional micro-fulfilment centre, and ship in reusable tins with refill pouches. A monthly subscription with recipe content builds retention; returned tins are credited, creating a closed loop.",
       "market": [
