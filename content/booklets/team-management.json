@@ -1,0 +1,41 @@
+{
+  "title": "Team Management",
+  "subtitle": "On Team and Enterprise plans, an Owner can create cloud environments that are shared with every member of the organization.",
+  "volume": "hello kitty",
+  "order": 2,
+  "industry": "tech",
+  "audience": "adult",
+  "readTime": 15,
+  "topics": [
+    "Hello management",
+    "hello management"
+  ],
+  "icon": "fa-chess-knight",
+  "color": "from-sky-500 to-blue-600",
+  "draft": true,
+  "chapters": [
+    {
+      "type": "blocks",
+      "title": "Team relations",
+      "kicker": "relationship details",
+      "blocks": [
+        {
+          "type": "callout",
+          "heading": "The Analogy",
+          "icon": "fa-comment-dots",
+          "text": "On Team and Enterprise plans, an Owner can create cloud environments that are shared with every member of the organization."
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "icon": "fa-bolt",
+              "title": "Hello organization",
+              "text": "On Team and Enterprise plans, an Owner can create cloud environments that are shared with every member of the organization."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
