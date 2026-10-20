@@ -989,7 +989,9 @@
   $('#year').textContent = new Date().getFullYear();
   $('#home').classList.remove('hidden');
   $('#home').innerHTML = `<p class="text-sm text-ink-700/60 dark:text-white/50"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading the library…</p>`;
-  fetch('content/library.json', { cache: 'no-cache' })
+  // A unique address on every visit skips GitHub Pages' 10-minute cache, so newly
+  // published posts and edits show up as soon as the deploy finishes.
+  fetch(`content/library.json?v=${Date.now()}`, { cache: 'no-store' })
     .then(res => { if (!res.ok) throw new Error(res.status + ' ' + res.statusText); return res.json(); })
     .then(data => {
       SITE = prepareSite(data.site);
