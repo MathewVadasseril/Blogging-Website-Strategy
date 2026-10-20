@@ -5,7 +5,7 @@
   "order": 1,
   "industry": "Technology & Marketplaces",
   "audience": "MBA / Case Competitors",
-  "readTime": 22,
+  "readTime": 23,
   "topics": [
     "Platforms & Marketplaces",
     "Network Effects",
@@ -238,8 +238,8 @@
       "type": "venture",
       "title": "Inspired Startup Idea & Financials",
       "kicker": "Venture Lab",
-      "name": "SkillSwap Pro",
       "tagline": "A B2B marketplace matching retired senior engineers with SMEs for on-demand technical advisory.",
+      "name": "SkillSwap Pro",
       "problem": "Small manufacturers cannot afford full-time senior engineering talent, while thousands of recently retired engineers want flexible, meaningful work. Existing freelancing platforms are generalist and lack vetting for deep industrial expertise.",
       "solution": "A curated two-sided platform with skills verification, scoped \"advisory sprints\" (4–20 hours), escrowed payments and outcome-based reviews. Ignition via partnerships with engineering alumni associations (supply) and regional manufacturing chambers (demand).",
       "market": [
